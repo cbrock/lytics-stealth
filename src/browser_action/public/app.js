@@ -22974,6 +22974,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (ProfileSegments.__proto__ || Object.getPrototypeOf(ProfileSegments)).call(this, props));
 
+	    _this.clickHandler = _this.clickHandler.bind(_this);
 	    _this.delete = _this.delete.bind(_this);
 	    _this.deleteSegment = _this.deleteSegment.bind(_this);
 	    _this.deleteAffinity = _this.deleteAffinity.bind(_this);
@@ -22982,6 +22983,25 @@
 	  }
 
 	  _createClass(ProfileSegments, [{
+	    key: 'clickHandler',
+	    value: function clickHandler(e) {
+	      e.preventDefault();
+
+	      var type = $(e.target).attr('data-type'),
+	          top = $(e.target).offset().top,
+	          left = $(e.target).offset().left,
+	          width = $('.entry').outerWidth(),
+	          height = $('.entry').outerHeight();
+
+	      // set the hidden field
+	      $('#hidden-type').val(type);
+
+	      // display the form
+	      $('.entry-wrapper').outerHeight($(window).height());
+	      $('.entry').css({ top: $(window).height() / 2 - height / 2, left: $(window).width() / 2 - width / 2 });
+	      $('.entry-wrapper').addClass('show');
+	    }
+	  }, {
 	    key: 'delete',
 	    value: function _delete(e, type) {
 	      e.preventDefault();
@@ -23044,7 +23064,7 @@
 	            null,
 	            _react2.default.createElement(
 	              'a',
-	              { href: '#', className: 'add-data', 'data-type': this.props.group == 'segments' ? 'segments' : 'affinities' },
+	              { href: '#', className: 'add-data', onClick: this.clickHandler, 'data-type': this.props.group == 'segments' ? 'segments' : 'affinities' },
 	              this.props.group == 'segments' ? 'add segment' : 'add affinities'
 	            )
 	          )

@@ -4,10 +4,29 @@ class ProfileSegments extends React.Component {
 
   constructor(props) {
     super(props);
+    this.clickHandler = this.clickHandler.bind(this);
     this.delete = this.delete.bind(this);
     this.deleteSegment = this.deleteSegment.bind(this);
     this.deleteAffinity = this.deleteAffinity.bind(this);
     this.eachSegment = this.eachSegment.bind(this);
+  }
+
+  clickHandler (e) {
+    e.preventDefault();
+
+    var type = $(e.target).attr('data-type'),
+        top = $(e.target).offset().top,
+        left = $(e.target).offset().left,
+        width = $('.entry').outerWidth(),
+        height = $('.entry').outerHeight();
+
+    // set the hidden field
+    $('#hidden-type').val(type);
+
+    // display the form
+    $('.entry-wrapper').outerHeight($(window).height());
+    $('.entry').css({top: ($(window).height()/2)-(height/2), left: ($(window).width()/2)-(width/2)});
+    $('.entry-wrapper').addClass('show');
   }
 
   delete (e, type) {
@@ -55,7 +74,7 @@ class ProfileSegments extends React.Component {
         <div className="value">
           {this.props.group == 'segments' ? this.props.state.segments.map(this.eachSegment) : this.props.state.affinities.map(this.eachSegment)}
           <div>
-            <a href="#" className="add-data" data-type={this.props.group == 'segments' ? 'segments' : 'affinities'}>{this.props.group == 'segments' ? 'add segment' : 'add affinities'}</a>
+            <a href="#" className="add-data" onClick={this.clickHandler} data-type={this.props.group == 'segments' ? 'segments' : 'affinities'}>{this.props.group == 'segments' ? 'add segment' : 'add affinities'}</a>
           </div>
         </div>
       </div>
