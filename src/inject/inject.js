@@ -2,11 +2,13 @@
 // needs refresh state.
 chrome.runtime.sendMessage({command: "refreshed"}, function(response){
 	// do nothing
+	console.log('refreshed: ' + response);
 });
 
 // get the active user from background
 chrome.runtime.sendMessage({command: "activeuser"}, function(response) {
 	// save to local storage
+	console.log(response);
 	localStorage.setItem('mock', JSON.stringify(response.mock));
 
 	var handoff = function() {
@@ -43,7 +45,7 @@ chrome.runtime.sendMessage({command: "activeuser"}, function(response) {
 
 			stealthlite.flushUser = function(){
 				var user = stealthlite.store.get('mock');
-
+				console.log(user);
 				// update cookie and profile if there is a set uid
 				if(user.uid !== ""){
 					stealthlite.setCookie('seerid', user.uid, 90);
@@ -65,7 +67,9 @@ chrome.runtime.sendMessage({command: "activeuser"}, function(response) {
 				excludeSegmentArray = [];
 
 			// for demo purposes we want to wipe the entire set of segments returned by lytics
-			data.segments = ['all'];
+			if(window.stealthlite.current.segments.length > 0){
+				data.segments = ['all'];
+			}
 
 			// inject mock segments from profile
 			// if the segment starts with a bang(!) we need to exclude it (not supported yet)
@@ -106,7 +110,9 @@ chrome.runtime.sendMessage({command: "activeuser"}, function(response) {
 
 		window.stealthlite.flushUser();
 		window.liosetup = window.liosetup || {};
-		window.liosetup.callback = onLyticsCallback;
+		window.liosetup.callback = window.liosetup.callback || [];
+		window.liosetup.callback.push(onLyticsCallback);
+		window.liosetup.callback.push(function(data){ console.log(data); });
 	}
 
 	if(response.state.enabled){

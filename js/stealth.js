@@ -34,6 +34,7 @@
   }
 
 
+
   // **************************************************************************
   // developer tools
   // **************************************************************************
@@ -115,13 +116,29 @@
       var profile = stealth.profile.get(stealth.settings.state.activeProfile);
 
       if(profile){
-        var mock = {
-          account: stealth.settings.state.account,
-          uid: profile._uid,
-          segments: profile.segments.concat(profile.affinities)
-        }
+        // check for dynamic params on profile
+        console.log(profile);
 
-        return mock;
+        if(profile._uid == '__random__'){
+          profile._uid = stealth.uid();
+          stealth.profile.update('_uid', profile._uid, false, function(){
+            var mock = {
+              account: stealth.settings.state.account,
+              uid: profile._uid,
+              segments: profile.segments.concat(profile.affinities)
+            }
+
+            return mock;
+          })
+        } else {
+          var mock = {
+            account: stealth.settings.state.account,
+            uid: profile._uid,
+            segments: profile.segments.concat(profile.affinities)
+          }
+
+          return mock;
+        }
       }
     }
 
@@ -313,6 +330,14 @@
     }
 
     return extended;
+  }
+
+  stealth.S4 = function() {
+    return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  }
+
+  stealth.uid = function() {
+    return ('stealth.'+stealth.S4()+stealth.S4()+stealth.S4()+stealth.S4()+stealth.S4()+stealth.S4()+stealth.S4());
   }
 
 

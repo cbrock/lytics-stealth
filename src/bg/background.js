@@ -1,3 +1,31 @@
+// handle messages
+var processMessage = function(message, callback){
+	console.log('stealth available:' + typeof stealth);
+	// get most recent settings
+	switch(message.command) {
+		case 'activeuser':
+			callback({
+				mock: stealth.mock(),
+				state: stealth.settings.state
+			});
+			break;
+		case 'state':
+			callback({
+				mock: stealth.mock(),
+				state: stealth.settings.state
+			});
+			break;
+		case 'refreshed':
+			stealth.settings.state.needsRefresh = false;
+			stealth.save.settings(function(){
+				callback(true);
+			}.bind(this))
+			break;
+		default:
+			callback('unknown message, unable to handle');
+	};
+}
+
 stealth.load.settings(function(){
 	stealth.dev.log('info', 'background: loading initial settings');
 });
@@ -27,33 +55,3 @@ chrome.runtime.onInstalled.addListener(function(details){
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
 	processMessage(message, sendResponse);
 });
-
-// handle messages
-var processMessage = function(message, callback){
-	// get most recent settings
-	switch(message.command) {
-		case 'activeuser':
-			callback({
-				mock: stealth.mock(),
-				state: stealth.settings.state
-			});
-			break;
-		case 'state':
-			callback({
-				mock: stealth.mock(),
-				state: stealth.settings.state
-			});
-			break;
-		case 'refreshed':
-			stealth.settings.state.needsRefresh = false;
-			stealth.save.settings(function(){
-				callback({
-					mock: stealth.mock(),
-					state: stealth.settings.state
-				});
-			}.bind(this))
-			break;
-		default:
-			callback('unknown message, unable to handle');
-	};
-}

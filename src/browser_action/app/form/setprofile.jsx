@@ -4,14 +4,30 @@ class FormSetProfile extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onProfileReset = this.onProfileReset.bind(this);
     this.onProfileSet = this.onProfileSet.bind(this);
     this.getOptions = this.getOptions.bind(this);
+  }
+
+  onProfileReset (e) {
+    var position = this.props.profilePosition;
+
+    // reset the profile
+    stealth.profile.reset(stealth.settings.state.whiteListedProfiles[position-1]);
+
+    // save the new account id
+    this.props.needsRefresh(true);
+
+    // render update
+    this.props.updateState({
+      profiles: stealth.profile.whitelisted(),
+      demo: stealth.settings.state.activeDemo
+    });
   }
 
   onProfileSet (e) {
     var position = this.props.profilePosition;
     var selectedOption = e.target.value || undefined;
-    console.log(position, selectedOption);
 
     // change demo name to 'unscripted' and update selected profile(s)
     stealth.settings.state.activeDemo = 'unscripted';
@@ -57,9 +73,10 @@ class FormSetProfile extends React.Component {
   render() {
     return (
       <div>
-        <select name="settings-proflie-1" id="settings-proflie-1" onChange={this.onProfileSet}>
+        <select onChange={this.onProfileSet}>
           {this.getOptions()}
         </select>
+        <button onClick={this.onProfileReset}>reset</button>
       </div>
     );
   }

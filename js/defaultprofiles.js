@@ -8,6 +8,7 @@ var defaultProfiles = {
     "image": "jon.png",
     "segments": [
       "all",
+      "demo",
       "royalty",
       "jon",
       "housestark"
@@ -25,8 +26,7 @@ var defaultProfiles = {
     "_uid": "22222.22222222222",
     "image": "hodor.png",
     "segments": [
-      "all",
-      "deceased",
+      "demo",
       "doors",
       "housestark"
     ],
@@ -42,9 +42,8 @@ var defaultProfiles = {
     "_uid": "33333.33333333333",
     "image": "daenerys.png",
     "segments": [
-      "all",
+      "demo",
       "royalty",
-      "queens",
       "housestargaryen"
     ],
     "affinities": [
@@ -57,13 +56,54 @@ var defaultProfiles = {
   "default": {
     "id": "default",
     "name": "Mr. Mystery",
-    "_uid": "00000.00000000000",
+    "_uid": "__random__",
+    "image": "unknown.png",
+    "segments": [],
+    "affinities": []
+  },
+
+  "mark": {
+    "id": "mark",
+    "name": "Mark",
+    "_uid": "01131496fd770d80d3dc0fba0904c900",
     "image": "unknown.png",
     "segments": [
-      "all"
+      "demo"
     ],
     "affinities": [
       "all"
     ]
+  },
+
+   "james": {
+    "id": "james",
+    "name": "James",
+    "_uid": "830320543f0f4a8fb325348ff0cd56d3",
+    "image": "james.png",
+    "segments": [
+      "all",
+      "demo_known"
+    ],
+    "affinities": [
+      "all"
+    ]
+  },
+
+  "moto1": {
+    "id": "moto1",
+    "name": "David",
+    "_uid": "119327.65424466785",
+    "image": "unknown.png",
+    "segments": [],
+    "affinities": []
+  },
+
+  "moto2": {
+    "id": "moto2",
+    "name": "Martyn",
+    "_uid": "81103.8456302279",
+    "image": "unknown.png",
+    "segments": [],
+    "affinities": []
   }
 };

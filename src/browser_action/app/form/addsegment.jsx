@@ -14,14 +14,16 @@ class FormAddSegment extends React.Component {
     var segmentName = document.getElementById('segment-field').value;
     var segmentType = document.getElementById('hidden-type').value;
 
+    console.log(segmentName, segmentType)
+
     // trigger needs refresh
     this.props.needsRefresh(true);
 
     // add the segment
-    stealth.updateProfile(segmentType, segmentName, false, function(){
+    stealth.profile.update(segmentType, segmentName, false, function(){
       this.props.updateState({
-        segments: stealth.profile.get(stealth.settings.state.activeProfile).segments,
-        affinities: stealth.profile.get(stealth.settings.state.activeProfile).affinities
+        segments: (stealth.settings.state.activeProfile && stealth.profile.get(stealth.settings.state.activeProfile).segments) || [],
+        affinities: (stealth.settings.state.activeProfile && stealth.profile.get(stealth.settings.state.activeProfile).affinities) || []
       });
     }.bind(this));
 

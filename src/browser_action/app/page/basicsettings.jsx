@@ -9,6 +9,7 @@ class PageBasicSettings extends React.Component {
     this.goToDocs = this.goToDocs.bind(this);
     this.goToDemoSite = this.goToDemoSite.bind(this);
     this.handleReset = this.handleReset.bind(this);
+    this.openAssets = this.openAssets.bind(this);
   }
 
   goToDocs () {
@@ -17,6 +18,13 @@ class PageBasicSettings extends React.Component {
 
   goToDemoSite () {
     window.open(this.props.state.demo.url, '_blank');
+  }
+
+  openAssets () {
+    console.log(this.props.state.demo.supportingTabs);
+    for (var i = 0; i < this.props.state.demo.supportingTabs.length; i++) {
+      window.open(this.props.state.demo.supportingTabs[i], '_blank');
+    }
   }
 
   handleReset () {
@@ -51,6 +59,7 @@ class PageBasicSettings extends React.Component {
             <div className="value">
               <button onClick={this.goToDocs}>Documentation</button>
               <button onClick={this.goToDemoSite}>Demo Site</button>
+              <button onClick={this.openAssets}>Open Assets</button>
             </div>
           </div>
           <div>

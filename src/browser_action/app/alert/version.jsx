@@ -8,9 +8,9 @@ class AlertVersion extends React.Component {
 
     var hasNewVersion;
     hasNewVersion = false;
-    if(stealth.settings.state.version !== chrome.runtime.getManifest().version){
-      hasNewVersion = true;
-    }
+    // if(stealth.settings.state.version !== chrome.runtime.getManifest().version){
+    //   hasNewVersion = true;
+    // }
 
     this.state = {
       newVersion: hasNewVersion

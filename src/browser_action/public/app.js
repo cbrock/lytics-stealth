@@ -21756,9 +21756,9 @@
 
 	    var hasNewVersion;
 	    hasNewVersion = false;
-	    if (stealth.settings.state.version !== chrome.runtime.getManifest().version) {
-	      hasNewVersion = true;
-	    }
+	    // if(stealth.settings.state.version !== chrome.runtime.getManifest().version){
+	    //   hasNewVersion = true;
+	    // }
 
 	    _this.state = {
 	      newVersion: hasNewVersion
@@ -21850,14 +21850,16 @@
 	      var segmentName = document.getElementById('segment-field').value;
 	      var segmentType = document.getElementById('hidden-type').value;
 
+	      console.log(segmentName, segmentType);
+
 	      // trigger needs refresh
 	      this.props.needsRefresh(true);
 
 	      // add the segment
-	      stealth.updateProfile(segmentType, segmentName, false, function () {
+	      stealth.profile.update(segmentType, segmentName, false, function () {
 	        this.props.updateState({
-	          segments: stealth.profile.get(stealth.settings.state.activeProfile).segments,
-	          affinities: stealth.profile.get(stealth.settings.state.activeProfile).affinities
+	          segments: stealth.settings.state.activeProfile && stealth.profile.get(stealth.settings.state.activeProfile).segments || [],
+	          affinities: stealth.settings.state.activeProfile && stealth.profile.get(stealth.settings.state.activeProfile).affinities || []
 	        });
 	      }.bind(this));
 
@@ -22143,17 +22145,34 @@
 
 	    var _this = _possibleConstructorReturn(this, (FormSetProfile.__proto__ || Object.getPrototypeOf(FormSetProfile)).call(this, props));
 
+	    _this.onProfileReset = _this.onProfileReset.bind(_this);
 	    _this.onProfileSet = _this.onProfileSet.bind(_this);
 	    _this.getOptions = _this.getOptions.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(FormSetProfile, [{
+	    key: 'onProfileReset',
+	    value: function onProfileReset(e) {
+	      var position = this.props.profilePosition;
+
+	      // reset the profile
+	      stealth.profile.reset(stealth.settings.state.whiteListedProfiles[position - 1]);
+
+	      // save the new account id
+	      this.props.needsRefresh(true);
+
+	      // render update
+	      this.props.updateState({
+	        profiles: stealth.profile.whitelisted(),
+	        demo: stealth.settings.state.activeDemo
+	      });
+	    }
+	  }, {
 	    key: 'onProfileSet',
 	    value: function onProfileSet(e) {
 	      var position = this.props.profilePosition;
 	      var selectedOption = e.target.value || undefined;
-	      console.log(position, selectedOption);
 
 	      // change demo name to 'unscripted' and update selected profile(s)
 	      stealth.settings.state.activeDemo = 'unscripted';
@@ -22220,8 +22239,13 @@
 	        null,
 	        _react2.default.createElement(
 	          'select',
-	          { name: 'settings-proflie-1', id: 'settings-proflie-1', onChange: this.onProfileSet },
+	          { onChange: this.onProfileSet },
 	          this.getOptions()
+	        ),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.onProfileReset },
+	          'reset'
 	        )
 	      );
 	    }
@@ -22366,6 +22390,7 @@
 	    _this.goToDocs = _this.goToDocs.bind(_this);
 	    _this.goToDemoSite = _this.goToDemoSite.bind(_this);
 	    _this.handleReset = _this.handleReset.bind(_this);
+	    _this.openAssets = _this.openAssets.bind(_this);
 	    return _this;
 	  }
 
@@ -22378,6 +22403,14 @@
 	    key: 'goToDemoSite',
 	    value: function goToDemoSite() {
 	      window.open(this.props.state.demo.url, '_blank');
+	    }
+	  }, {
+	    key: 'openAssets',
+	    value: function openAssets() {
+	      console.log(this.props.state.demo.supportingTabs);
+	      for (var i = 0; i < this.props.state.demo.supportingTabs.length; i++) {
+	        window.open(this.props.state.demo.supportingTabs[i], '_blank');
+	      }
 	    }
 	  }, {
 	    key: 'handleReset',
@@ -22462,6 +22495,11 @@
 	                  'button',
 	                  { onClick: this.goToDemoSite },
 	                  'Demo Site'
+	                ),
+	                _react2.default.createElement(
+	                  'button',
+	                  { onClick: this.openAssets },
+	                  'Open Assets'
 	                )
 	              )
 	            ),
