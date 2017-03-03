@@ -32,7 +32,12 @@
     "webpack": "^1.13.1"
   },
   "devDependencies": {
+    "autoprefixer": "^6.7.6",
+    "babel-preset-react": "^6.23.0",
+    "copy-webpack-plugin": "^4.0.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.10.0",
+    "html-loader": "^0.4.5",
     "standard": "^8.2.0",
     "url-loader": "^0.5.7",
     "webpack-livereload-plugin": "^0.10.0"

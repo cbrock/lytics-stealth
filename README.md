@@ -1,10 +1,11 @@
 ### Running the App
 ```
+npm install
 npm run dev
 ```
 
 ### Task List
-* [x] Handle Excluding/Removing Real Segments
+* Handle Excluding/Removing Real Segments
 * Configure Settings Page
 * Configure Advanced Settings Page
 * Configure Resets

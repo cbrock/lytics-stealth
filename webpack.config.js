@@ -1,18 +1,25 @@
-const autoprefixer = require('autoprefixer')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const LiveReloadPlugin = require('webpack-livereload-plugin');
-const path = require('path')
+var autoprefixer = require('autoprefixer')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var LiveReloadPlugin = require('webpack-livereload-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var path = require("path");
 
 const sassLoaders = [
   'css-loader',
   'postcss-loader',
-  'sass-loader?indentedSyntax=false&includePaths[]=' + path.resolve(__dirname, './src/browser_action')
+  'sass-loader?indentedSyntax=false&includePaths[]=' + path.resolve(__dirname, './dist')
 ]
 
 module.exports = {
   entry: {
-    app: ['./src/browser_action/app/index']
+    background: ['./src/background/index'],
+    content_init: ['./src/content/loadfirst/index'],
+    content_lytics: ['./src/content/loadlast/index'],
+    interface: ['./src/interface/app/index.jsx'],
+    settings: ['./src/settings/app/index.jsx'],
+    stealth: ['./src/stealth/stealth']
   },
+
   module: {
     loaders: [
       {
@@ -29,26 +36,46 @@ module.exports = {
         loader: 'url-loader',
         options: {
           limit: 25000,
-        },
+        }
       }
     ]
   },
+
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, './src/browser_action/public'),
-    publicPath: '/src/browser_action/public'
+    path: path.join(__dirname, './dist/')
   },
+
   plugins: [
     new ExtractTextPlugin('[name].css'),
-    new LiveReloadPlugin()
+    new LiveReloadPlugin(),
+    new CopyWebpackPlugin(
+      [
+        // interface
+        {from:'src/interface/interface.html'},
+        {from:'src/interface/jquery-3.1.1.min.js', to:'thirdparty/'},
+        {from:'src/interface/legacy.js'},
+        {from:'src/interface/img', to:'img/'},
+
+        // settings
+        {from:'src/settings/settings.html'},
+        {from:'src/settings/img', to:'img/'},
+
+        // core extension requirements
+        {from:'src/base/icons', to:'icons/'},
+        {from:'src/base/manifest.json'}
+      ]
+    )
   ],
+
   postcss: [
     autoprefixer({
       browsers: ['last 2 versions']
     })
   ],
+
   resolve: {
-    extensions: ['', '.js', '.jsx', '.scss', '.sass'],
-    root: [path.join(__dirname, './src/browser_action')]
+    extensions: ['', '.js', '.json', '.jsx', '.scss', '.sass'],
+    root: [path.join(__dirname, './dist')]
   }
-}
+};
