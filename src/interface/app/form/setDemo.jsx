@@ -11,6 +11,8 @@ class FormSetDemo extends React.Component {
   onDemoSet (e) {
     var selectedOption = e.target.value || undefined;
 
+    console.log(selectedOption);
+
     // change demo name to 'unscripted' and update selected profile(s)
     stealth.settings.state.activeDemo = selectedOption;
     stealth.demo.activate(stealth.settings.state.activeDemo);
@@ -29,7 +31,7 @@ class FormSetDemo extends React.Component {
   }
 
   getOptions () {
-    var demos = stealth.defaults.demos;
+    var demos = stealth.demo.all();
     var out = [];
 
     // get current state is there is one

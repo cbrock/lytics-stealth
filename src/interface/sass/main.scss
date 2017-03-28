@@ -24,6 +24,11 @@ body {
   background-image: radial-gradient(ellipse farthest-corner at center center, $main-grad-light 0%, $main-grad-dark 100%);
 }
 
+#app{
+  min-width: 540px;
+  min-height: 375px;
+}
+
 h1 {
   span {
     float: right;

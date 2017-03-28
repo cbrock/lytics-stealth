@@ -1,24 +1,32 @@
 // chrome.browserAction.setBadgeBackgroundColor({color:[250, 0, 0, 100]});
-// chrome.browserAction.setBadgeText({text:"ON"});
+// chrome.browserAction.setBadgeText({text:"BAD"});
 
 // handle messages
 var processMessage = function(message, callback){
-    console.log('stealth available:' + typeof stealth);
     // get most recent settings
     switch(message.command) {
         case 'activeuser':
             callback({
                 mock: stealth.mock(),
-                state: stealth.settings.state
+                state: stealth.settings.state,
+                whitelisted: stealth.domain.allowed(message.hostname)
             });
             break;
         case 'state':
             callback({
                 mock: stealth.mock(),
-                state: stealth.settings.state
+                state: stealth.settings.state,
+                whitelisted: stealth.domain.allowed(message.hostname)
             });
             break;
         case 'refreshed':
+            // needs warning
+            if(!stealth.domain.allowed(message.hostname) && stealth.settings.state.enabled){
+                // chrome.browserAction.setBadgeBackgroundColor({color:[250, 0, 0, 100]});
+                // chrome.browserAction.setBadgeText({text:"BAD"});
+                chrome.browserAction.setIcon({path: 'icons/icon16-red.png'});
+            }
+
             stealth.settings.state.needsRefresh = false;
             stealth.save.settings(function(){
                 callback(true);

@@ -1,10 +1,12 @@
 /* ============================================ */
 /* Global Styles */
 /* ============================================ */
-$main-grad-light: #444444;
-$main-grad-dark: #3a3a3a;
-$sub-grad-light: #353535;
-$sub-grad-dark: #272727;
+$gray-darker: #2b2b2b;
+$gray-dark: #333333;
+$gray-mid: #3c3c3c;
+$gray-light: #4d4d4d;
+$gray-lighter: #5f5f5f;
+$gray-lightest: #aaa;
 $lytics-blue: #0093D0;
 $lytics-blue-darker: #0073a0;
 $lytics-green: #3cc479;
@@ -13,8 +15,227 @@ $lytics-red: #f00000;
 $lytics-red-darker: #9b0000;
 $lytics-orange-warn: #ff9d00;
 
-
-
 /* ============================================ */
 /* Backend Settings Styles */
 /* ============================================ */
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic);
+
+// fonts
+$font-family: 'Lato', Helvetica, sans-serif;
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-heavy: 700;
+$font-height: 1.5;
+
+// universal
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  left: 0;
+  top: 0;
+  font-size: 100%;
+  color: white;
+  background: $gray-mid;
+}
+
+* {
+  font-family: $font-family;
+  line-height: $font-height;
+}
+
+.navcol, .pagecol {
+    float: left;
+    -webkit-box-sizing: border-box;
+}
+
+.navcol {
+    width: 20%;
+
+    .logo {
+        text-align: center;
+        padding: 30px 15px 20px 0px;
+
+        img {
+            width: 100px;
+        }
+    }
+
+    .navmenu {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        list-style-type: none;
+
+        li {
+            background: $gray-light;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin: 5px 0;
+
+            &.active {
+                background: $gray-dark;
+            }
+
+            &:hover {
+                background: $gray-dark;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.pagecol {
+    width: 80%;
+    min-height:100vh;
+    background: $gray-dark;
+    padding: 30px 35px;
+
+    button {
+        margin-left: 10px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        transition: background .15s ease-in-out;
+        outline : none;
+    }
+
+    .settingwrapper {
+        margin: 0 0 50px 0;
+        padding: 0;
+
+        .info {
+            margin: 0 0 10px 0;
+            padding: 0;
+
+            h2 {
+                font-size: 24px;
+                line-height: 24px;
+                margin: 0;
+                padding: 0;
+            }
+
+            p {
+                margin: 0;
+                padding: 10px 0;
+                max-width: 600px;
+                font-size: 14px;
+                line-height: 14px;
+                color: $gray-lightest;
+            }
+        }
+
+        button {
+            background-color: $lytics-green;
+
+            &:hover {
+                background: $gray-light;
+            }
+
+            &.blue {
+                background-color: $lytics-blue;
+
+                &:hover {
+                    background: $gray-light;
+                }
+            }
+        }
+
+        .whitelist {
+            list-style-type: none;
+            margin: 5px 0 0 15px;
+            padding: 0;
+            display: inline-block;
+
+            li {
+                margin: 10px 0;
+                color: #ccc;
+                font-size: 14px;
+
+                span {
+                    min-width: 250px;
+                    background: $gray-lighter;
+                    border-radius: 10px;
+                    padding: 5px 10px;
+                    display: inline-block;
+
+                    button {
+                        background: $lytics-red;
+                        float: right;
+
+                        &:hover {
+                            background: $gray-dark;
+                        }
+                    }
+                }
+            }
+        }
+
+        .field {
+            margin: 0 0 10px 0;
+
+            label {
+                width: 150px;
+                text-align: right;
+                margin-right: 10px;
+                display: inline-block;
+            }
+
+            input {
+                min-width: 350px;
+                min-height: 25px;
+                font-size: 14px;
+                padding-left: 5px;
+            }
+
+            select {
+                font-size: 14px;
+                min-width: 250px;
+                margin-right: 10px;
+            }
+
+            textarea {
+                max-width: 100%;
+                width: 100%;
+                height: 350px;
+                font-size: 14px;
+            }
+
+            .add {
+                margin: 0 0 0 10px;
+                padding: 7px 15px;
+                line-height: 16px;
+            }
+
+            .save {
+                font-size: 14px;
+                padding: 5px 15px;
+                text-transform: uppercase;
+                margin-left: 440px;
+            }
+        }
+
+        .jsonedit {
+            margin: 20px 0 0 0;
+            width: 500px;
+
+            .example {
+                margin: 20px 0 0 0;
+                padding: 5px 20px 25px 20px;
+                background: $gray-mid;
+                color: $gray-lightest;
+
+                .tab0 { padding-left: 0px; }
+                .tab1 { padding-left: 20px; }
+                .tab2 { padding-left: 40px; }
+                .tab3 { padding-left: 60px; }
+                .tab4 { padding-left: 80px; }
+                .tab5 { padding-left: 100px; }
+            }
+        }
+    }
+}

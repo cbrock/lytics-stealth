@@ -13,14 +13,16 @@
   stealth.settings = {
     state: {
       enabled: false,
-      version: chrome.runtime.getManifest().version,
+      // version: chrome.runtime.getManifest().version,
       account: '',
       unclean: false,
       activeDemo: '',
       activeProfile: '',
-      whiteListedProfiles: []
+      whiteListedProfiles: [],
+      whiteListedDomains: []
     },
-    profiles: {}
+    profiles: {},
+    demos: {}
   }
 
 
@@ -109,7 +111,7 @@
 
 
   // **************************************************************************
-  // storage operations
+  // mock operations
   // **************************************************************************
   stealth.mock = function(){
     if(stealth.settings.state.activeProfile){
@@ -117,8 +119,6 @@
 
       if(profile){
         // check for dynamic params on profile
-        console.log(profile);
-
         if(profile._uid == '__random__'){
           profile._uid = stealth.uid();
           stealth.profile.update('_uid', profile._uid, false, function(){
@@ -148,6 +148,121 @@
     }
   }
 
+
+
+  // **************************************************************************
+  // domain whitelist management
+  // **************************************************************************
+  stealth.domain = {
+    allowed: function (url, callback) {
+      if(!stealth.settings.state.whiteListedDomains || stealth.settings.state.whiteListedDomains.length < 1){
+        return false;
+      }
+
+      if(url === 'current'){
+        url = w.location.hostname;
+      }
+
+      if(typeof url === 'undefined'){
+        return false;
+      }
+
+      var pos = stealth.settings.state.whiteListedDomains.indexOf(url.toLowerCase());
+      if(pos > -1 || stealth.settings.state.whiteListedDomains.length === 0){
+        if(callback){
+          callback(true);
+        }
+        return true;
+      }
+
+      if(callback){
+        callback(false);
+      }
+
+      return false;
+    },
+    add: function (domain, callback) {
+      if(!stealth.domain.validate(domain)){
+        alert('invalid domain name');
+        return false;
+      }
+
+      if(!stealth.settings.state.whiteListedDomains){
+        stealth.settings.state.whiteListedDomains = [];
+      }
+
+      console.log('domain', domain);
+
+      var pos = stealth.settings.state.whiteListedDomains.indexOf(domain.toLowerCase());
+      if(pos === -1){
+        stealth.settings.state.whiteListedDomains.push(domain.toLowerCase());
+
+        if(callback){
+          callback(stealth.settings.state.whiteListedDomains, true);
+        }
+        return true;
+      }
+
+      if(callback){
+        callback(stealth.settings.state.whiteListedDomains, false);
+      }
+      return false;
+    },
+    remove: function (domain, callback) {
+      if(!stealth.settings.state.whiteListedDomains){
+        return false;
+      }
+
+      var pos = stealth.settings.state.whiteListedDomains.indexOf(domain.toLowerCase());
+      if(pos > -1){
+        stealth.settings.state.whiteListedDomains.splice(pos, 1);
+
+        if(callback){
+          callback(stealth.settings.state.whiteListedDomains, true);
+        }
+        return true;
+      }
+
+      if(callback){
+        callback(stealth.settings.state.whiteListedDomains, false);
+      }
+      return false;
+    },
+    validate: function(domain) {
+      console.log(domain);
+      if (/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(domain)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+
+
+  // **************************************************************************
+  // variable map management
+  // **************************************************************************
+  stealth.var = {
+    get: function(key){
+      if(key === 'all'){
+        return stealth.settings.state.var || {};
+      }
+
+      if(stealth.settings.state.var){
+        return stealth.settings.state.var[key];
+      } else {
+        return '';
+      }
+    },
+    set: function(key, value){
+      if(!stealth.settings.state.var){
+        stealth.settings.state.var = {};
+      }
+      stealth.settings.state.var[key] = value;
+      return true;
+    }
+  }
 
 
   // **************************************************************************
@@ -181,27 +296,50 @@
   }
 
   stealth.profile.update = function (key, value, remove, callback) {
-    // get the profile
-    var profile = stealth.extend(stealth.profile.get(stealth.settings.state.activeProfile))
+    var overwrite;
+    var allKeys = Object.keys(stealth.profile.all());
 
-    // update the key
-    if(key === "segments" || key === "affinities"){
-      if(remove){
-        // remove from the array
-        var index = profile[key].indexOf(value);
-        if (index > -1) {
-            profile[key].splice(index, 1);
-        }
-      } else {
-        profile[key].push(value);
+    for (var i = 0; i < allKeys.length; i++) {
+      if(allKeys[i] === key){
+        overwrite = true;
+        break;
       }
-    } else {
-      profile[key] = value;
     }
 
-    stealth.settings.profiles[profile.id] = profile;
+    if(key === 'new'){
+      if(value.id !== ''){
+        overwrite = true;
+        key = value.id;
+      }
+    }
 
-    stealth.save.settings(callback);
+    if(overwrite){
+      stealth.dev.log('debug', 'overwriting profile record for ' + key);
+      stealth.settings.profiles[key] = value;
+      stealth.save.settings(callback);
+    }else{
+      // get the profile
+      var profile = stealth.extend(stealth.profile.get(stealth.settings.state.activeProfile))
+
+      // update the key
+      if(key === "segments" || key === "affinities"){
+        if(remove){
+          // remove from the array
+          var index = profile[key].indexOf(value);
+          if (index > -1) {
+              profile[key].splice(index, 1);
+          }
+        } else {
+          profile[key].push(value);
+        }
+      } else {
+        profile[key] = value;
+      }
+
+      stealth.settings.profiles[profile.id] = profile;
+
+      stealth.save.settings(callback);
+    }
   }
 
   stealth.profile.reset = function(id) {
@@ -230,7 +368,7 @@
   stealth.demo = {};
 
   stealth.demo.get = function(id){
-    var demos = stealth.defaults.demos;
+    var demos = stealth.demo.all();
 
     // if the demo exists return it
     if(!!demos[id]){
@@ -240,13 +378,45 @@
     return undefined;
   }
 
+  stealth.demo.all = function() {
+    return Object.assign({}, stealth.defaults.demos, stealth.settings.demos);
+  }
+
+  stealth.demo.update = function(key, value, remove, callback) {
+    var overwrite;
+    var allKeys = Object.keys(stealth.demo.all());
+
+    // validate the minimum requirements
+
+    // if the key already exists we are doing an overwrite rather than a new entry
+    for (var i = 0; i < allKeys.length; i++) {
+      if(allKeys[i] === key){
+        overwrite = true;
+        break;
+      }
+    }
+
+    if(overwrite) {
+      stealth.dev.log('debug', 'overwriting demo record for ' + key);
+    } else {
+      key = value.id;
+      stealth.dev.log('debug', 'adding new demo record for ' + key);
+    }
+
+    stealth.settings.demos[key] = value;
+    stealth.save.settings(callback);
+  }
+
   stealth.demo.reset = function (id, callback) {
+    // reset the demos in settings to the default
+    console.warn('need to reset to the default here');
+
     // activate the demo
     stealth.demo.activate(id, true, callback);
   }
 
   stealth.demo.activate = function (id, reset, callback) {
-    var demos = stealth.defaults.demos;
+    var demos = stealth.demo.all();
 
     stealth.dev.log('debug', 'activating demo ' + id);
 
@@ -257,7 +427,18 @@
       stealth.settings.state.activeDemo = demos[id].id;
 
       // set the account id
-      stealth.settings.state.account = demos[id].account;
+      // check if the id is associated with a variable key before setting
+      if(stealth.settings.state.var && typeof stealth.settings.state.var[demos[id].account] !== 'undefined' && stealth.settings.state.var[demos[id].account] !== '') {
+        stealth.dev.log('debug', 'setting account to value defined in setting variables ' + stealth.settings.state.var[demos[id].account]);
+        stealth.settings.state.account = stealth.settings.state.var[demos[id].account];
+      } else {
+        stealth.dev.log('debug', 'setting account to value defined in definition ' + demos[id].account);
+        if(demos[id].account.length < 15) {
+          stealth.settings.state.account = '';
+        } else {
+          stealth.settings.state.account = demos[id].account;
+        }
+      }
 
       // set the whitelisted profiles
       stealth.settings.state.whiteListedProfiles = demos[id].whiteListedProfiles;
@@ -268,8 +449,8 @@
       }
 
       // reset the profiles
-      if(reset){
-        for (var i = 0; i < stealth.defaults.demos[id].whiteListedProfiles.length; i++) {
+      if(reset && typeof stealth.defaults.demos[id] !== 'undefined'){
+        for (var i = 0; i < stealth.demo.all()[id].whiteListedProfiles.length; i++) {
           stealth.profile.reset(stealth.defaults.demos[id].whiteListedProfiles[i]);
         }
       }
@@ -289,6 +470,22 @@
   // **************************************************************************
   // utilities
   // **************************************************************************
+  stealth.script = {
+    load: function(url, callback){
+      var script = d.createElement("script")
+      script.type = "text/javascript";
+
+      script.onload = function(){
+        if(callback){
+          callback();
+        }
+      };
+
+      script.src = url;
+      d.getElementsByTagName("head")[0].appendChild(script);
+    }
+  }
+
   stealth.index = function(obj,i) {
     return obj[i];
   }
@@ -345,18 +542,23 @@
   // **************************************************************************
   // library initialization
   // **************************************************************************
-  stealth.dev.log('info', 'loading current settings');
-
-  stealth.load.settings(function(){
+  stealth.init = function(callback) {
     stealth.dev.log('info', 'loading current settings');
 
-    // if there is currently no demo set, default to the first demo
-    if(!stealth.settings.state.activeDemo){
-      stealth.demo.activate(Object.keys(stealth.defaults.demos)[0], false, function(){
-        stealth.dev.log('info', 'first time loading, setting up default demo: ' + Object.keys(stealth.defaults.demos)[0]);
-      })
-    }
-  });
+    stealth.load.settings(function(){
+
+      stealth.dev.log('info', 'loading current settings');
+
+      // if there is currently no demo set, default to the first demo
+      if(!stealth.settings.state.activeDemo){
+        stealth.demo.activate(Object.keys(stealth.defaults.demos)[0], false, function(){
+          stealth.dev.log('info', 'first time loading, setting up default demo: ' + Object.keys(stealth.defaults.demos)[0]);
+        })
+      }
+
+      callback();
+    });
+  }
 
   w.stealth = stealth;
 

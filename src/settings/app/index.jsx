@@ -2,12 +2,12 @@ import React from 'react';
 import {render} from 'react-dom';
 
 // styles
-import stylegrid from '../sass/grid.scss';
 import stylemain from '../sass/main.scss';
 
 // modules
-import PageHome from './page/home.jsx';
-import PageAdvanced from './page/advanced.jsx';
+import PageGeneral from './page/general.jsx';
+import PageUser from './page/user.jsx';
+import PageDemo from './page/demo.jsx';
 
 class App extends React.Component {
 
@@ -15,11 +15,17 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      currentPage: 'home'
+      currentPage: 'general',
+      whitelistedDomains: stealth.settings.state.whiteListedDomains || [],
+      variableMap: stealth.settings.state.var || {},
+      dataSyncUrl: stealth.var.get('dataSyncUrl') || '',
+      profiles: stealth.profile.all() || [],
+      demos: stealth.demo.all() || []
     };
 
     this.updateState = this.updateState.bind(this);
     this.needsRefresh = this.needsRefresh.bind(this);
+    this.handleNavClick = this.handleNavClick.bind(this);
   }
 
   updateState (obj) {
@@ -34,29 +40,39 @@ class App extends React.Component {
     }.bind(this));
   }
 
-  render () {
+  handleNavClick (e) {
+    var page = e.target.id;
+    this.updateState({currentPage: page});
+  }
 
+  render () {
     let pageBody;
-    if (this.state.currentPage == 'advanced') {
+    if (this.state.currentPage == 'users') {
       pageBody = (
-        <PageAdvanced updateState={this.updateState} needsRefresh={this.needsRefresh} state={this.state}></PageAdvanced>
+        <PageUser updateState={this.updateState} needsRefresh={this.needsRefresh} state={this.state}></PageUser>
+      )
+    } else if (this.state.currentPage == 'demos') {
+      pageBody = (
+        <PageDemo updateState={this.updateState} needsRefresh={this.needsRefresh} state={this.state}></PageDemo>
       )
     } else {
       pageBody = (
-        <PageHome updateState={this.updateState} needsRefresh={this.needsRefresh} state={this.state}></PageHome>
+        <PageGeneral updateState={this.updateState} needsRefresh={this.needsRefresh} state={this.state}></PageGeneral>
       )
     }
 
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-4">
-            Stealth
-            By Lytics
-          </div>
-          <div className="col-8">
-            {pageBody}
-          </div>
+      <div>
+        <div className="navcol">
+          <div className="logo"><img src="img/stealth-logo.svg" /></div>
+          <ul className="navmenu">
+            <li className={(this.state.currentPage === 'general' ? 'active' : '')} onClick={this.handleNavClick} id="general">General</li>
+            <li className={(this.state.currentPage === 'users' ? 'active' : '')} onClick={this.handleNavClick} id="users">Users</li>
+            <li className={(this.state.currentPage === 'demos' ? 'active' : '')} onClick={this.handleNavClick} id="demos">Demos</li>
+          </ul>
+        </div>
+        <div className="pagecol">
+          {pageBody}
         </div>
       </div>
     );

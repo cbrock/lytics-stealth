@@ -14,4 +14,8 @@ $(document).ready(function() {
   $('#segment-field').click(function(e){
     e.stopPropagation();
   });
+
+  stealth.init(function(){
+    stealth.script.load('interface.js');
+  })
 });

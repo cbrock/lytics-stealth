@@ -13,8 +13,8 @@ const sassLoaders = [
 module.exports = {
   entry: {
     background: ['./src/background/index'],
-    content_init: ['./src/content/loadfirst/index'],
-    content_lytics: ['./src/content/loadlast/index'],
+    contentinit: ['./src/content/loadfirst/index'],
+    contentlytics: ['./src/content/loadlast/index'],
     interface: ['./src/interface/app/index.jsx'],
     settings: ['./src/settings/app/index.jsx'],
     stealth: ['./src/stealth/stealth']
@@ -51,14 +51,18 @@ module.exports = {
     new LiveReloadPlugin(),
     new CopyWebpackPlugin(
       [
+        // background
+        {from:'src/background/background-init.js'},
+
         // interface
         {from:'src/interface/interface.html'},
         {from:'src/interface/jquery-3.1.1.min.js', to:'thirdparty/'},
-        {from:'src/interface/legacy.js'},
+        {from:'src/interface/interface-init.js'},
         {from:'src/interface/img', to:'img/'},
 
         // settings
         {from:'src/settings/settings.html'},
+        {from:'src/settings/settings-init.js'},
         {from:'src/settings/img', to:'img/'},
 
         // core extension requirements

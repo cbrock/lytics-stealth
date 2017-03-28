@@ -14,7 +14,7 @@
   "background": {
     "scripts": [
       "stealth.js",
-      "background.js"
+      "background-init.js"
     ],
     "persistent": true
   },
@@ -41,7 +41,7 @@
         "file:///*/*"
       ],
       "js": [
-        "content_init.js"
+        "contentinit.js"
       ],
       "run_at": "document_start"
     },
@@ -52,7 +52,7 @@
         "file:///*/*"
       ],
       "js": [
-        "content_lytics.js"
+        "contentlytics.js"
       ],
       "run_at": "document_end"
     }

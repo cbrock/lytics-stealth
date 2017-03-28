@@ -1,7 +1,7 @@
 var defaultDemos = {
   "lead_capture_automation": {
     "id": "lead_capture_automation",
-    "account": "2028c57ac1dfcfad86f2725d562db4fa",
+    "account": "ecom_acct_id",
     "name": "Basic Demo: Lead capture and email automation.",
     "documentation": "https://gist.github.com/markhayden/1c7bfa8f6258ae8950e596f2a4ca8843",
     "url": "http://ecom.lyticsdemo.com",
@@ -21,7 +21,7 @@ var defaultDemos = {
   },
   "ecom_content_reco": {
     "id": "ecom_content_reco",
-    "account": "2028c57ac1dfcfad86f2725d562db4fa",
+    "account": "ecom_acct_id",
     "name": "Ecommerce Content Recommendation",
     "documentation": "http://google.com",
     "url": "http://ecom.lyticsdemo.com",
@@ -34,7 +34,7 @@ var defaultDemos = {
   },
   "ecom_lead_gen": {
     "id": "ecom_lead_gen",
-    "account": "2028c57ac1dfcfad86f2725d562db4fa",
+    "account": "ecom_acct_id",
     "name": "Ecommerce Lead Generation",
     "documentation": "http://google.com",
     "url": "http://ecom.lyticsdemo.com",

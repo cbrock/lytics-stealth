@@ -1,8 +1,17 @@
 // get the active user from background
-chrome.runtime.sendMessage({command: "state"}, function(response) {
+chrome.runtime.sendMessage({command: "state", hostname:window.location.hostname}, function(response) {
+    // prevent the plugin from working on non-whitelisted domains or while inactive
+    if(!response.state.enabled){
+        return;
+    }
+
+    if(!response.whitelisted){
+        console.warn('Unable to proxy Lytics JavaScript tag onto site via Lytics Stealth, domain not whitelisted. It is best to turn the plugin off while you are not actively giving a demonstration.');
+        return;
+    }
+
     // save to local storage
     localStorage.setItem('account', response.state.account);
-    // console.log(response);
 
     var lyticsproxy = function() {
         // Lytics Core JStag
@@ -13,12 +22,8 @@ chrome.runtime.sendMessage({command: "state"}, function(response) {
         }
     }
 
-    if(response.state.enabled){
-        console.log('[stealth] checking if Lytics needs to be proxied');
-
-        // pass js from extension to client
-        var script = document.createElement("script");
-        script.textContent = "(" + lyticsproxy.toString() + "())";
-        document.documentElement.appendChild(script);
-    }
+    console.log('[stealth] checking if Lytics needs to be proxied');
+    var script = document.createElement("script");
+    script.textContent = "(" + lyticsproxy.toString() + "())";
+    document.documentElement.appendChild(script);
 });

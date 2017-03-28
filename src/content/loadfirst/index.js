@@ -1,14 +1,22 @@
 // inject is loaded on every page refresh, use this opportunity to clear the
 // needs refresh state.
-chrome.runtime.sendMessage({command: "refreshed"}, function(response){
+chrome.runtime.sendMessage({command:"refreshed", hostname:window.location.hostname}, function(response){
     // do nothing
-    console.log('refreshed: ' + response);
 });
 
 // get the active user from background
-chrome.runtime.sendMessage({command: "activeuser"}, function(response) {
+chrome.runtime.sendMessage({command:"activeuser", hostname:window.location.hostname}, function(response) {
+    // prevent the plugin from working on non-whitelisted domains or while inactive
+    if(!response.state.enabled){
+        return;
+    }
+
+    if(!response.whitelisted){
+        console.warn('Unable to activate Lytics Stealth, domain not whitelisted. It is best to turn the plugin off while you are not actively giving a demonstration.');
+        return;
+    }
+
     // save to local storage
-    console.log(response);
     localStorage.setItem('mock', JSON.stringify(response.mock));
 
     var handoff = function() {
@@ -109,18 +117,18 @@ chrome.runtime.sendMessage({command: "activeuser"}, function(response) {
         }
 
         window.stealthlite.flushUser();
-        window.liosetup = window.liosetup || {};
-        window.liosetup.callback = window.liosetup.callback || [];
-        window.liosetup.callback.push(onLyticsCallback);
-        window.liosetup.callback.push(function(data){ console.log(data); });
+
+        // init callbacks
+        !function(l,a){a.liosetup=a.liosetup||{},a.liosetup.callback=a.liosetup.callback||[],a.liosetup.addCallback=function(l){if("function"==typeof a.liosetup.callback){var o=[];o.push(a.liosetup.callback),a.liosetup.callback=o}a.lio&&a.lio.loaded?l(a.lio.data):a.liosetup.callback.push(l)}}(document,window);
+
+        window.liosetup.addCallback(onLyticsCallback);
+        // window.liosetup.addCallback(function(data){ console.log(data); });
     }
 
-    if(response.state.enabled){
-        console.log('[stealth] adding user overrides');
+    console.log('[stealth] adding user overrides');
 
-        // pass js from extension to client
-        var script = document.createElement("script");
-        script.textContent = "(" + handoff.toString() + "())";
-        document.documentElement.appendChild(script);
-    }
+    // pass js from extension to client
+    var script = document.createElement("script");
+    script.textContent = "(" + handoff.toString() + "())";
+    document.documentElement.appendChild(script);
 });
