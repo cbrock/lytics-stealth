@@ -119,10 +119,8 @@ chrome.runtime.sendMessage({command:"activeuser", hostname:window.location.hostn
         window.stealthlite.flushUser();
 
         // init callbacks
-        !function(l,a){a.liosetup=a.liosetup||{},a.liosetup.callback=a.liosetup.callback||[],a.liosetup.addCallback=function(l){if("function"==typeof a.liosetup.callback){var o=[];o.push(a.liosetup.callback),a.liosetup.callback=o}a.lio&&a.lio.loaded?l(a.lio.data):a.liosetup.callback.push(l)}}(document,window);
-
-        window.liosetup.addCallback(onLyticsCallback);
-        // window.liosetup.addCallback(function(data){ console.log(data); });
+        !function(l,a){a.liosetup=a.liosetup||{},a.liosetup.callback=a.liosetup.callback||[],a.liosetup.addEntityLoadedCallback=function(l,o){if("function"==typeof a.liosetup.callback){var i=[];i.push(a.liosetup.callback),a.liosetup.callback=i}a.lio&&a.lio.loaded?l(a.lio.data):o?a.liosetup.callback.unshift(l):a.liosetup.callback.push(l)}}(document,window);
+        window.liosetup.addEntityLoadedCallback(onLyticsCallback, true);
     }
 
     console.log('[stealth] adding user overrides');

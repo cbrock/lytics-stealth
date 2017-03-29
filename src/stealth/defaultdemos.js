@@ -11,19 +11,14 @@ var defaultDemos = {
       "james"
     ],
     "supportingTabs": [
-      "http://ecom.lyticsdemo.com?demo=lead_capture_automation",
-      "https://activate.getlytics.com/user/_uids/76294.29714676953",
-      "https://mail.google.com/mail/u/0/#label/Lytics+Demo",
-      "https://lytics.createsend.com/automation/reports/viewCampaign.aspx?d=d&c=6546EE8F416514F4&ID=0E055995CB3D7A84&temp=False&tx=0",
-      "https://activate.getlytics.com",
-      "https://lytics.createsend.com/login?ReturnUrl=&username=mark%2Blyticsdemo%40lytics.io&password=weathered.hurricane.vengeance.P90X"
+      "http://master.lyticsdemo.com"
     ]
   },
   "ecom_content_reco": {
     "id": "ecom_content_reco",
     "account": "ecom_acct_id",
     "name": "Ecommerce Content Recommendation",
-    "documentation": "http://google.com",
+    "documentation": "",
     "url": "http://ecom.lyticsdemo.com",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc non nisi efficitur, feugiat felis et, dignissim augue. Donec posuere tincidunt feugiat. Quisque ut velit varius, pulvinar lectus vel, commodo libero. Etiam vitae nulla fringilla, euismod elit vel, efficitur enim.",
     "whiteListedProfiles": [
@@ -43,6 +38,22 @@ var defaultDemos = {
       "hodor",
       "jon",
       "daenerys"
+    ]
+  },
+  "google_dfp": {
+    "id": "google_dfp",
+    "account": "ecom_acct_id",
+    "name": "Google DFP Demo",
+    "documentation": "",
+    "url": "https://master.lyticsdemo.com",
+    "description": "Demonstrates the power of leveraging Lytics Audience Segments to drive targeting of DFP ad units. This example breaks down targeting into three buckets: general, electronics and beauty affinities.",
+    "whiteListedProfiles": [
+      "james",
+      "melissa",
+      "monica"
+    ],
+    "supportingTabs": [
+      "http://master.lyticsdemo.com"
     ]
   },
   "unscripted": {

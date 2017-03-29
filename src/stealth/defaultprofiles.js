@@ -60,7 +60,7 @@ var defaultProfiles = {
     "id": "mark",
     "name": "Mark",
     "_uid": "01131496fd770d80d3dc0fba0904c900",
-    "image": "unknown.png",
+    "image": "mark.png",
     "segments": [
       "demo"
     ],
@@ -81,20 +81,24 @@ var defaultProfiles = {
       "all"
     ]
   },
-  "moto1": {
-    "id": "moto1",
-    "name": "David",
-    "_uid": "119327.65424466785",
-    "image": "unknown.png",
-    "segments": [],
+  "melissa": {
+    "id": "melissa",
+    "name": "Melissa",
+    "_uid": "18145011457582839",
+    "image": "melissa.png",
+    "segments": [
+      "likes_electronics"
+    ],
     "affinities": []
   },
-  "moto2": {
-    "id": "moto2",
-    "name": "Martyn",
-    "_uid": "81103.8456302279",
-    "image": "unknown.png",
-    "segments": [],
+  "monica": {
+    "id": "monica",
+    "name": "Monica",
+    "_uid": "8557533845630233434",
+    "image": "monica.png",
+    "segments": [
+      "likes_beauty"
+    ],
     "affinities": []
   }
 };

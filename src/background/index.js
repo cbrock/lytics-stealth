@@ -25,6 +25,10 @@ var processMessage = function(message, callback){
                 // chrome.browserAction.setBadgeBackgroundColor({color:[250, 0, 0, 100]});
                 // chrome.browserAction.setBadgeText({text:"BAD"});
                 chrome.browserAction.setIcon({path: 'icons/icon16-red.png'});
+            } else if(stealth.settings.state.enabled) {
+                chrome.browserAction.setIcon({path: 'icons/icon16-on.png'});
+            } else {
+                chrome.browserAction.setIcon({path: 'icons/icon16.png'});
             }
 
             stealth.settings.state.needsRefresh = false;
@@ -72,4 +76,23 @@ chrome.runtime.onInstalled.addListener(function(details){
 // listen for messages from content
 chrome.runtime.onMessage.addListener(function(message,sender,sendResponse){
     processMessage(message, sendResponse);
+});
+
+// listens for tab change
+chrome.tabs.onActivated.addListener(function(){
+    chrome.tabs.query({
+        active: true,
+        lastFocusedWindow: true
+    }, function(tabs) {
+        var tab = tabs[0];
+        var l = document.createElement("a");
+        l.href = tab.url;
+        if(!stealth.domain.allowed(l.hostname) && stealth.settings.state.enabled){
+            chrome.browserAction.setIcon({path: 'icons/icon16-red.png'});
+        } else if(stealth.settings.state.enabled) {
+            chrome.browserAction.setIcon({path: 'icons/icon16-on.png'});
+        } else {
+            chrome.browserAction.setIcon({path: 'icons/icon16.png'});
+        }
+    });
 });
