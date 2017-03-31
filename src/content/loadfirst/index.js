@@ -70,6 +70,8 @@ chrome.runtime.sendMessage({command:"activeuser", hostname:window.location.hostn
 
         // when lytics loads update the paylaod and flush all the pre-set values before running integrations
         var onLyticsCallback = function(data){
+            console.log(data);
+
             var w = window,
                 newSegmentArray = [],
                 excludeSegmentArray = [];
@@ -82,6 +84,10 @@ chrome.runtime.sendMessage({command:"activeuser", hostname:window.location.hostn
             // inject mock segments from profile
             // if the segment starts with a bang(!) we need to exclude it (not supported yet)
             for (var i = 0; i < window.stealthlite.current.segments.length; i++) {
+                if(!window.stealthlite.current.segments[i]){
+                    continue;
+                }
+
                 if(window.stealthlite.current.segments[i].startsWith('!')){
                     excludeSegmentArray.push(window.stealthlite.current.segments[i].slice(1));
                 } else {

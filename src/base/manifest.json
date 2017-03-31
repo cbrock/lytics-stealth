@@ -1,7 +1,7 @@
 {
   "name": "Lytics Stealth",
   "short_name": "Lytics Stealth",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Mark Hayden",
   "manifest_version": 2,
   "description": "Installs the Lytics tag on any site and gives the ability to control the profile for demonstration purposes.",

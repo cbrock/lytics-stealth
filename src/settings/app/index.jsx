@@ -66,9 +66,9 @@ class App extends React.Component {
         <div className="navcol">
           <div className="logo"><img src="img/stealth-logo.svg" /></div>
           <ul className="navmenu">
-            <li className={(this.state.currentPage === 'general' ? 'active' : '')} onClick={this.handleNavClick} id="general">General</li>
-            <li className={(this.state.currentPage === 'users' ? 'active' : '')} onClick={this.handleNavClick} id="users">Users</li>
-            <li className={(this.state.currentPage === 'demos' ? 'active' : '')} onClick={this.handleNavClick} id="demos">Demos</li>
+            <li className={(this.state.currentPage === 'general' ? 'active' : '')} onClick={this.handleNavClick} id="general">Security</li>
+            <li className={(this.state.currentPage === 'users' ? 'active' : '')} onClick={this.handleNavClick} id="users">Profile Editor</li>
+            <li className={(this.state.currentPage === 'demos' ? 'active' : '')} onClick={this.handleNavClick} id="demos">Demo Editor</li>
           </ul>
         </div>
         <div className="pagecol">

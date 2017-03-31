@@ -10,6 +10,7 @@ class PageBasicSettings extends React.Component {
     this.goToDemoSite = this.goToDemoSite.bind(this);
     this.handleReset = this.handleReset.bind(this);
     this.openAssets = this.openAssets.bind(this);
+    this.handleOptionsClick = this.handleOptionsClick.bind(this);
   }
 
   goToDocs () {
@@ -35,6 +36,10 @@ class PageBasicSettings extends React.Component {
     });
   }
 
+  handleOptionsClick () {
+    chrome.tabs.create({'url': "/settings.html" } );
+  }
+
   handleAdvancedSettingsClick () {
     this.props.updateState({currentPage: 'advancedsettings'});
   }
@@ -43,7 +48,7 @@ class PageBasicSettings extends React.Component {
     return (
       <section className="settings">
         <div className="basic">
-          <h1>Basic Settings <span><a href="#" onClick={this.handleAdvancedSettingsClick}>advanced</a></span></h1>
+          <h1>Basic Settings <span><a href="#" onClick={this.handleOptionsClick}>advanced</a></span><span><a href="#" onClick={this.handleAdvancedSettingsClick}>profiles</a></span><span><a href="#" onClick={this.handleAdvancedSettingsClick}>account</a></span></h1>
           <div>
             <div className="value">
               <FormSetDemo updateState={this.props.updateState} needsRefresh={this.props.needsRefresh} state={this.props.state}></FormSetDemo>

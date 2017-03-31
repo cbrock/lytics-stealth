@@ -9,6 +9,10 @@ class ProfileWrapper extends React.Component {
   }
 
   eachProfile (profile) {
+    if(typeof profile === 'undefined'){
+      return;
+    }
+
     return (
       <Profile key={profile.id} id={profile.id} needsRefresh={this.props.needsRefresh} updateState={this.props.updateState} profile={profile}></Profile>
     )

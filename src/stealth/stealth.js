@@ -229,7 +229,10 @@
       return false;
     },
     validate: function(domain) {
-      console.log(domain);
+      if(domain === 'localhost'){
+        return true;
+      }
+
       if (/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/.test(domain)) {
         return true;
       } else {
