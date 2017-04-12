@@ -46,23 +46,28 @@
 
   stealth.dev.log = function (level, message) {
     var namespace = '[stealth]';
+    var renderedMessage = namespace + ' ' + level + ': ' + message;
 
     switch(level) {
       case 'debug':
         if(stealth.dev.debug){
-          console.log(namespace + ' ' + level + ': ' + message);
+          console.log(renderedMessage);
         }
         break;
       case 'info':
-        console.log(namespace + ' ' + level + ': ' + message);
+        console.log(renderedMessage);
         break;
       case 'warn':
-        console.warn(namespace + ' ' + level + ': ' + message);
+        console.warn(renderedMessage);
         break;
       case 'error':
-        console.error(namespace + ' ' + level + ': ' + message);
+        console.error(renderedMessage);
         break;
+      default:
+        return false;
     }
+
+    return renderedMessage;
   }
 
 
@@ -190,8 +195,6 @@
       if(!stealth.settings.state.whiteListedDomains){
         stealth.settings.state.whiteListedDomains = [];
       }
-
-      console.log('domain', domain);
 
       var pos = stealth.settings.state.whiteListedDomains.indexOf(domain.toLowerCase());
       if(pos === -1){

@@ -11,7 +11,7 @@
     "dev": "webpack --progress --colors --watch",
     "build": "webpack",
     "lint": "standard",
-    "test": "standard && webpack --bail"
+    "test": "jest"
   },
   "author": "Mark Hayden",
   "license": "MIT",
@@ -39,6 +39,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.10.0",
     "html-loader": "^0.4.5",
+    "jest": "^19.0.2",
     "standard": "^8.2.0",
     "url-loader": "^0.5.7",
     "webpack-livereload-plugin": "^0.10.0"
