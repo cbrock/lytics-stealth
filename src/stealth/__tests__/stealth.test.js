@@ -1,59 +1,5 @@
-const sum = require('../dist/stealth.js');
-
-// Chrome Sync Mock
-function storageMock() {
-  var chrome = {}
-  chrome.data = {};
-  chrome.storage = {
-    sync:{
-      set: function(obj, fn){
-        var d = chrome.storage.extend(chrome.data, obj);
-        chrome.data = d;
-        fn(chrome.data);
-      },
-      get: function(key, fn){
-        fn(chrome.data[key]);
-      }
-    },
-    extend: function(){
-      var extended = {};
-      var deep = false;
-      var i = 0;
-      var length = arguments.length;
-
-      // Check if a deep merge
-      if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
-        deep = arguments[0];
-        i++;
-      }
-
-      // Merge the object into the extended object
-      var merge = function (obj) {
-        for ( var prop in obj ) {
-          if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
-            // If deep merge and property is an object, merge properties
-            if ( deep && Object.prototype.toString.call(obj[prop]) === '[object Object]' ) {
-              extended[prop] = extend( true, extended[prop], obj[prop] );
-            } else {
-              extended[prop] = obj[prop];
-            }
-          }
-        }
-      };
-
-      // Loop through each object and conduct a merge
-      for ( ; i < length; i++ ) {
-        var obj = arguments[i];
-        merge(obj);
-      }
-
-      return extended;
-    }
-  };
-
-  return chrome;
-}
-
+// require('../../../dist/stealth.js');
+import StealthLibrary from '../../../dist/stealth.js';
 
 // *********************************************************
 // General Constant Tests
@@ -134,11 +80,6 @@ describe('test that all log levels return the correct message text', function() 
 // Storage Tests
 // *********************************************************
 describe('test that we can get and set local storage items', function() {
-  beforeAll(() => {
-    // Set up the Chrome object mock
-    window.chrome = storageMock();
-  });
-
   it('should save a test variable to storage', function() {
     stealth.storage.set('test', 'working', function(d){
       expect(d.test).toBe('working');

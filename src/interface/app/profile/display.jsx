@@ -24,7 +24,7 @@ class ProfileDisplay extends React.Component {
 
   render() {
     return (
-      <div onClick={this.handleClick}>
+      <div className="testingme" onClick={this.handleClick}>
         <img className={(stealth.settings.state.activeProfile === this.props.profile.id ? 'selected' : '')} src={'img/' + this.props.profile.image} alt="" />
         <p>{this.props.profile.name}</p>
       </div>
